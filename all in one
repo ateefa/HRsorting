@@ -1,0 +1,223 @@
+def merge(a,n1,index1,n2,index2,b,index,count):
+    while n1!=0 and n2!=0:
+        if a[index1]<=a[index2]:
+            b[index]=a[index1]
+            index+=1
+            index1+=1
+            n1-=1
+        else:
+            b[index]=a[index2]
+            index+=1
+            index2+=1
+            n2-=1
+            count+=n1
+    while n1!=0:
+        b[index]=a[index1]
+        index+=1
+        index1+=1
+        n1-=1
+    while n2!=0:
+        b[index]=a[index2]
+        index+=1
+        index2+=1
+        n2-=1
+    return count,b
+
+def mergepass(a,n,l,b,count):
+    q=int(n/(2*l))   # total no. of pairs present
+    s=2*l*q            # total no. of elements that are in pairs
+    r=n-s                 #total no. of elements remaining without making any pair
+    for i in range(q):
+        lb=2*i*l        #lowerbound
+        count,b = merge(a,l,lb,l,lb+l,b,lb,count)
+    if r<=l:
+        for i in range(r):
+            b[s+i]=a[s+i]
+    else:
+        count,b = merge(a,l,s,r-l,s+l,b,s,count)
+    return count,b
+
+def countInversions(a,n):
+    l=1
+    count=0
+    while l<n:
+        b=[0]*n
+        count,b=mergepass(a,n,l,b,count)
+        a=[0]*n
+        count,a=mergepass(b,n,l*2,a,count)
+        l=4*l
+    return count
+ 
+for i in range(int(input())):
+	n = int(input())
+	arr = list(map(int, input().rstrip().split()))
+	result = countInversions(arr,n)
+	print(result)
+
+
+
+# def merge(arr0, arr1):
+#     inversions = 0
+#     result = []
+#     # two indices to keep track of where we are in the array
+#     i0 = 0
+#     i1 = 0
+#     # probably doesn't really save much time but neater than calling len() everywhere
+#     len0 = len(arr0)
+#     len1 = len(arr1)
+#     while len0 > i0 and len1 > i1:
+#         if arr0[i0] <= arr1[i1]:
+#             result.append(arr0[i0])
+#             i0 += 1
+#         else:
+#             # count the inversion right here: add the length of left array
+#             inversions += len0 - i0
+#             result.append(arr1[i1])
+#             i1 += 1
+
+#     if len0 == i0:
+#         result += arr1[i1:]
+#     elif len1 == i1:
+#         result += arr0[i0:]
+
+#     return result, inversions
+
+
+
+# def swap(a, pos1, pos2):
+# 	a[pos1], a[pos2] = a[pos2], a[pos1]
+# 	return a
+
+# def countInversions(a):
+# 	count=0
+# 	for i in range(len(arr)):
+# 		for j in range(len(arr)-1) :
+# 			if (a[j] > a[j + 1]) :
+# 				a=swap(a,j, j + 1)
+# 				count+=1
+# 	print("Array is sorted in",count,"swaps.")
+# 	print("First Element:",a[0])
+# 	print("Last Element:",a[len(a)-1])
+    
+
+# n = int(input())
+# arr = list(map(int, input().rstrip().split()))
+# result = countInversions(arr)
+
+# import math
+# import os
+# import random
+# import re
+# import sys
+# from collections import deque
+
+# class RunningMedian(object):
+    
+#     def __init__(self, maxLen):
+#         self.d = [0] * 201
+#         self.queue = deque()
+#         self.maxLen = maxLen
+    
+#     def add(self, v: int) -> None:
+#         self.queue.append(v)
+#         self.d[v] += 1
+#         if len(self.queue) > self.maxLen:
+#             val = self.queue.popleft()
+#             self.d[val] -= 1
+    
+#     def median(self) -> int:
+#         a = int(self.maxLen / 2)
+#         b = a + 1
+#         mid1 = None
+#         mid2 = None
+#         rs = 0
+        
+#         for idx, v in enumerate(self.d):
+#             rs += v
+#             if rs >= a and mid1 is None:
+#                 mid1 = idx
+#             if rs >= b:
+#                 mid2 = idx
+#                 break
+        
+#         if self.maxLen % 2 == 0:
+#             return (mid1 + mid2) / 2.0
+#         else:
+#             return mid2
+            
+# def activityNotifications(expenditure, d):
+#     notifications = 0
+#     r = RunningMedian(d)
+#     for v in expenditure[:d]:
+#         r.add(v)
+        
+#     for idx, v in enumerate(expenditure[d:]):
+#         median = r.median()
+#         # print(median, expenditure[idx: idx+d])
+#         if v >= (2*median):
+#             notifications += 1
+#         r.add(v)
+    
+#     return notifications
+# nd = input().split()
+# n = int(nd[0])
+# d = int(nd[1])
+# expenditure = list(map(int, input().rstrip().split()))
+# result = activityNotifications(expenditure, d)
+# print(result)
+
+# from functools import cmp_to_key
+# class Player:
+# 	def __init__(self, name, score):
+# 			self.name = name
+# 			self.score=score
+# 	def __repr__(self):
+# 		return {'name':self.name, 'score':self.score}
+# 	def comparator(a, b):
+# 		if a.score<b.score:
+# 			return 1
+# 		elif a.score>b.score:
+# 			return -1
+# 		else:
+# 			if a.name>b.name:
+# 				return 1
+# 			if a.name<b.name:
+# 				return -1
+# 			if a.name==b.name:
+# 				return 0				
+
+# n = int(input())
+# data = []
+# for i in range(n):
+#     name, score = input().split()
+#     score = int(score)
+#     player = Player(name, score)
+#     data.append(player)
+    
+# data = sorted(data, key=cmp_to_key(Player.comparator))
+# for i in data:
+#     print(i.name, i.score)
+
+
+
+
+
+
+# def maximumToys(prices, k):
+# 	prices.sort()
+# 	count=k
+# 	ans=0
+# 	for i in prices:
+# 		if(count>=i):
+# 			ans+=1
+# 			count-=i
+# 		else:
+# 			break	
+# 	return ans		
+
+# nk = input().split()
+# n = int(nk[0])
+# k = int(nk[1])
+# prices = list(map(int, input().rstrip().split()))
+# result = maximumToys(prices, k)
+# print(result)
